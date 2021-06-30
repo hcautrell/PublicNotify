@@ -1,0 +1,22 @@
+DECLARE
+    l_body       CLOB;
+    v_email      varchar2(50);
+    V_FROM_EMAIL VARCHAR2(50);
+BEGIN
+    Select tempo_email into v_email from tempo_users where user_name = upper(:P21_USER_NAME);
+    Select tempo_email into V_FROM_EMAIL from tempo_users a where user_name = V('APP_USER');
+     
+    l_body := l_body ||'This message sent to you by: '|| :app_user ||'.'||utl_tcp.crlf||utl_tcp.crlf;
+    l_body := l_body ||'Username: '|| :P21_USER_NAME ||utl_tcp.crlf||utl_tcp.crlf;
+    l_body := l_body ||'PASSWORD: '|| :P21_new_pw ||utl_tcp.crlf||utl_tcp.crlf;
+    l_body := l_body ||'*Sent to you from the TEMPO Reporting system'||utl_tcp.crlf;
+     
+    apex_mail.send(
+        p_to       => V_EMAIL,   -- change to your email address
+        p_from     => V_FROM_EMAIL,
+        p_cc       => V_FROM_EMAIL,
+        p_body     => l_body,
+        p_subj     => 'TEMPO Reporting Workspace: http://s-pmas-ofmw001.swe.la.gov/apex/f?p=150:1');
+
+    APEX_MAIL.PUSH_QUEUE('localhost','25');
+END;

@@ -1,0 +1,37 @@
+SELECT
+       a.stl_seq_no,
+       a.stl_service_no,
+       a.stl_task1_no,
+       a.stl_date_rendered,
+       b.user_name,
+       decode(b.user_name, 'APRIL_S', 'ARS', 'HERMAN_R', 'HR', 'JACKIE_M', 'JM', 'DONALD_T', 'DT', 'PERRY_T', 'PT','KATHYW', 'KW',
+       'CHRIS_R', 'CR', 'ELLIOTTV', 'EV', 'EMILYW', 'EW','CAROLYNB', 'CB', 'GEORGE_K', 'GAK', 'TED_B', 'TB', 'JAYG', 'JG', 'DWANAK',
+       'DK', 'ANNH', 'AH', 'APROCHASKA', 'AP','SARAA', 'SA', 'ROGER_W', 'RW', 'NANCYC', 'NC', 'DEBRAJ', 'DJJ', 'MIKED', 'MD','CRUSH','CIR', 'DEIDRAJ', 'DJ','TALICIAE','TE',
+       'KEIDRAP', 'KP', 'BRANDONW', 'BW', 'JILLCA', 'JC', 'COURTNEYB', 'CJB','SPENCERB', 'SB', 'AMBERL', 'AL','OSCARM', 'OM', 'CHARLOTTEG', 'CG',
+       'RICKEYT', 'RT', 'BEAUG','BG','P00284236', 'NR', 'P00103186', 'GH','P00011890','AJ', 'P00326946', 'ASH', 'P00024174', 'RB', B.USER_NAME) AS USER_INI,
+       c.service_desc,
+       d.rorg_short_desc Office1,
+       e.rorg_short_desc Office2,
+       a.stl_hours_worked,
+       a.stl_hourly_rate_billed,
+       a.stl_hours_worked * a.stl_hourly_rate_billed amount_billed,
+       a.stl_comment ,
+       decode(g.task2_desc, null, f.task1_desc ||' '||a.stl_with, f.task1_desc ||' - '||g.task2_desc) SR_TASK,
+       a.stl_rcat_flag,
+       a.STL_RCAT_ID,
+       a.STL_NUM_CONSULT,
+    a.STL_SETTLE_FLAG
+    FROM legal_service_request c,
+       legal_service_task_list a,
+       ref_task_1 f,
+       ref_task_2 g,
+       cfis.i_org@cfislink_prod d,
+       cfis.i_org@cfislink_prod e,
+       osec_users b
+ WHERE ((c.service_id = a.stl_service_no)
+        AND (a.stl_task1_no = f.task1_seq_no)
+        AND (a.stl_office_1 = d.rorg_id)
+        AND (a.stl_rstaff_id = b.rstaff_id)
+        AND (a.stl_task2_no = g.task2_seq_no(+))
+        AND (a.stl_office_2 = e.rorg_id(+))
+       )

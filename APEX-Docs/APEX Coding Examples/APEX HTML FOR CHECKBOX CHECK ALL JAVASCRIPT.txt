@@ -1,0 +1,13 @@
+<input type="checkbox" name="f01" value="" onclick="ToggleAll(this)">
+
+<script type="text/javascript"> 
+function ToggleAll(e) { if (e.checked) { CheckAll(); } else { ClearAll(); CheckRange(); } } 
+function Check(e) { e.checked = true; } 
+function Clear(e) { e.checked = false; } 
+function CheckAll() { var ml = document.wwv_flow; var len = ml.elements.length; 
+for (var i = 0; i < len; i++) { var e = ml.elements[i]; 
+if (e.name == "f01") { Check(e); } } ml.f01.checked = true; } 
+function ClearAll() { var ml = document.wwv_flow; var len = ml.elements.length; 
+for (var i = 0; i < len; i++) { var e = ml.elements[i]; 
+if (e.name == "f01") { Clear(e); } } ml.f01.checked = false; }
+</script>
